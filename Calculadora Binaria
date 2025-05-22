@@ -2,20 +2,20 @@
 #include <string.h>
 #include <stdlib.h>
 
-//conversao decimais
+// Conversão de decimais
 void DecimalBinario(int num1) {
-    if (num1 == 0)
+    if (num1 == 0) {
         printf("%d", num1);
-    else {
+    } else {
         DecimalBinario(num1 / 2);
         printf("%d", num1 % 2);
     }
 }
 
 void DecimalOctal(int num1) {
-    if (num1 == 0)
+    if (num1 == 0) {
         printf("%d", num1);
-    else {
+    } else {
         DecimalOctal(num1 / 8);
         printf("%d", num1 % 8);
     }
@@ -25,149 +25,67 @@ void DecimalHexadecimal(int num1) {
     printf("%X\n", num1);
 }
 
-//conversao binarios
-void BinarioDecimal (const char *num1) {
+// Conversão de binários
+int BinarioDecimal (const char *num1) {
     int decimal = 0;
-    int comprimento = strlen(num1);
-    for (int i = 0; i < comprimento; i++) {
+    for (int i = 0; num1[i] != '\0'; i++) {
         if (num1[i] == '1') {
             decimal = decimal * 2 + 1;
         } else if (num1[i] == '0') {
             decimal = decimal * 2;
         } else {
-            printf("Invalido");
-            return;
+            printf("Invalido\n");
+            return -1;
         }
     }
-    printf("%d\n", decimal);
+    return decimal;
 }
 
-void BinarioOctal (const char *num1) {
-    int len = strlen(num1);
-    int resto = len % 3;
-    int inicio = 0;
+void BinarioOctal (const char *num1) { //binario>decimal>octal
+    int decimal = BinarioDecimal(num1);
+    if (decimal == -1) return;
 
-    if (resto != 0) {
-        int valor = 0;
-        for ( int i = 0; i < resto; i++) {
-            valor = valor * 2 + (num1[i] - '0');
-        }
-        printf("%d", valor);
-        inicio = resto;
-    }
-    while (inicio < len) {
-        int valor = 0;
-        for (int i = 0; i < 3; i++) {
-            valor = valor * 2 + (num1[inicio + i] - '0');
-        }
-        printf("%d", valor);
-        inicio += 3;
-    }
+    DecimalOctal(decimal);
     printf("\n");
 }
 
-void BinarioHexadecimal (const char *num1) {
-    int decimal = 0;
-    int len = strlen(num1);
-    for (int i = 0; i < len; i++) {
-        if (num1[i] == '1') {
-            decimal = decimal * 2 + 1;
-        } else if (num1[i] == '0') {
-            decimal = decimal * 2;
-        } else {
-            printf("Invalido");
-            return;
-        }
-    }
-    printf("%X\n", decimal);
-}
+void BinarioHexadecimal (const char *num1) { //binario>decimal>hexadecimal
+    int decimal = BinarioDecimal(num1);
+    if (decimal == -1) return;
 
-//conversao octais
-void OctalDecimal (const char *num1) {
-    int decimal = 0;
-    int len = strlen(num1);
-    for (int i = 0; i < len; i++) {
-        if (num1[1] < '0' || num1[i] > '7') {
-            printf("Invalido");
-            return;
-        }
-        decimal = decimal * 8 + (num1[i] - '0');
-    }
-    printf("%d\n", decimal);
-}
-
-void OctalBinario (const char *num1) { //Octal>Decimal>Binario
-    int decimal = 0;
-    int len = strlen(num1);
-    for (int i = 0; i < len; i++) {
-        if (num1[i] < '0' || num1[i] > '7') {
-            printf("Invalido");
-            return;
-        }
-        decimal = decimal * 8 + (num1[i] - '0');
-    }
-    DecimalBinario(decimal);
-    printf("\n");
-}
-
-void OctalHexadecimal (const char *num1) { //Octal>Decimal>Hexadecimal
-    int decimal = 0;
-    int len = strlen(num1);
-    for (int i = 0; i < len; i++) {
-        if (num1[i] < '0' || num1[i] > '7') {
-            printf("Invalido");
-            return;
-        }
-        decimal = decimal * 8 + (num1[i] - '0');
-    }
     DecimalHexadecimal(decimal);
 }
 
-//conversao hexas(decimais
-void HexadecimalDecimal (const char *num1) {
+// Conversão de octais
+int OctalDecimal (const char *num1) {
     int decimal = 0;
     for (int i = 0; num1[i] != '\0'; i++) {
-        char c = num1[i];
-        int valor;
-
-        if (c >= '0' && c <= '9') {
-            valor = c - '0';
-        } else if (c >= 'a' && c <= 'f') {
-            valor = c - 'a' + 10;
-        } else if (c >= 'A' && c <= 'F') {
-            valor = c - 'A' + 10;
-        } else {
-            printf("Invalido");
-            return;
+        if (num1[i] < '0' || num1[i] > '7') {
+            printf("Invalido\n");
+            return -1;
         }
-        decimal = decimal * 16 + valor;
+        decimal = decimal * 8 + (num1[i] - '0');
     }
-    printf("%d\n", decimal);
+    return decimal;
 }
 
-void HexadecimalBinario (const char *num1) { //Hexadecimal>Decimal>Binario
-    int decimal = 0;
-    for (int i = 0; num1[i] != '\0'; i++) {
-        char c = num1[i];
-        int valor;
+void OctalBinario (const char *num1) { //octal>decimal>binario
+    int decimal = OctalDecimal(num1);
+    if (decimal == -1) return;
 
-        if (c >= '0' && c <= '9') {
-            valor = c - '0';
-        } else if (c >= 'a' && c <= 'f') {
-            valor = c - 'a' + 10;
-        } else if (c >= 'A' && c <= 'F') {
-            valor = c - 'A' + 10;
-        } else {
-            printf("Invalido");
-            return;
-        }
-        decimal = decimal * 16 + valor;
-    }
     DecimalBinario(decimal);
     printf("\n");
 }
 
-void HexadecimalOctal (const char *num1) { //Hexadecimal>Decimal>Octal
+void OctalHexadecimal (const char *num1) { //octal>decimal>hexadecimal
+    int decimal = OctalDecimal(num1);
+    if (decimal == -1) return;
+
+    DecimalHexadecimal(decimal);
+}
+
+// Conversão de hexadecimais
+int HexadecimalDecimal (const char *num1) {
     int decimal = 0;
     for (int i = 0; num1[i] != '\0'; i++) {
         char c = num1[i];
@@ -181,298 +99,277 @@ void HexadecimalOctal (const char *num1) { //Hexadecimal>Decimal>Octal
             valor = c - 'a' + 10;
         } else {
             printf("Invalido\n");
-            return;
+            return -1;
         }
         decimal = decimal * 16 + valor;
     }
+    return decimal;
+}
+
+void HexadecimalBinario (const char *num1) { //hexadecimal>decimal>binario
+    int decimal = HexadecimalDecimal(num1);
+    if (decimal == -1) return;
+
+    DecimalBinario(decimal);
+    printf("\n");
+}
+
+void HexadecimalOctal (const char *num1) { //hexadecimal>decimal>octal
+    int decimal = HexadecimalDecimal(num1);
+    if (decimal == -1) return;
+
     DecimalOctal(decimal);
     printf("\n");
 }
 
-//soma de numeros binarios
-void inverter_bin (char *str) {
-    int x, y;
-    char temp;
-    for (x = 0, y = strlen(str) - 1; x < y; x++, y--) {
-        temp = str[x];
-        str[x] = str[y];
-        str[y] = temp;
-    }
-}
-char* somaBin(const char *a, const char *b) {
-    int lenA = strlen(a);
-    int lenB = strlen(b);
-    int maxLen = (lenA > lenB ? lenA : lenB) + 2;
-
-    char *resultado = malloc(maxLen);
-    if (!resultado) {
-        printf("Numero Invalido");
-        exit(1);
-    }
-    int x = lenA - 1, y = lenB - 1, k = 0, carry = 0;
-    while (x >= 0 || y >= 0 || carry) {
-        int bitA = (x >= 0) ? a[x--] - '0' : 0;
-        int bitB = (y >= 0) ? b[y--] - '0' : 0;
-
-        int soma = bitA + bitB + carry;
-        resultado[k++] = (soma % 2) + '0';
-        carry = soma / 2;
-    }
-    resultado[k] = '\0';
-    inverter_bin(resultado);
-    return resultado;
-}
-
-//subtracao de numeros binarios
-char* subtracaoBin (const char *a, const char *b) {
-    int lenA = strlen(a);
-    int lenB = strlen(b);
-    if ( lenB > lenA || (lenB == lenA && strcmp(b, a) > 0)) {
-    printf("Digite um numero valido\n");
-        return NULL;
-    }
-    int maxLen = lenA +1;
-    char *resultado = (char *)malloc(maxLen);
-    if (!resultado) {
-        printf("Numero Invalido");
-        exit(1);
-    }
-    int x = lenA -1, y = lenB -1, k = 0, borrow = 0;
-    while (x >= 0) {
-        int bitA = a[x] - '0';
-        int bitB = (y >= 0) ? b[y] - '0' : 0;
-
-        bitA -= borrow;
-
-        if (bitA < bitB) {
-            bitA += 2;
-            borrow = 1;
-        } else {
-            borrow = 0;
-        }
-        resultado [k++] = (bitA - bitB) + '0';
-        x--;
-        y--;
-    }
-    while (k > 1 && resultado[k - 1] == '0') {
-        k--;
-    }
-    resultado[k] = '\0';
-
-    for (int x = 0, y = k-1; x < y; x++, y--) {
-        char temp = resultado[x];
-        resultado[x] = resultado[y];
-        resultado[y] = temp;
-    }
-    return resultado;
-
-}
-
-//multiplicacao de numeros binarios
-void multiplicacaoBin (const char *a, const char *b) {
+// Soma de números binários
+void somaBin(const char *a, const char *b) {
     int decA = 0, decB = 0;
 
-    for (int i = 0; a[i] != '\0'; i++) { //binario>decimal>binario
+    for (int i = 0; a[i] != '\0'; i++) { //num1=a -> binario>decimal 
         if (a[i] == '1') {
-            decA = decA *2 +1;
+            decA = decA * 2 + 1;
         } else if (a[i] == '0') {
-            decA = decA *2;
+            decA = decA * 2;
         } else {
-            printf("Invalido");
+            printf("Invalido\n");
             return;
         }
     }
-    for (int i = 0; b[i] != '\0'; i++) { //binario>decimal>binario
+    for (int i = 0; b[i] != '\0'; i++) { //num2=b -> binario>decimal
         if (b[i] == '1') {
-            decB = decB *2 +1;
+            decB = decB * 2 + 1;
         } else if (b[i] == '0') {
-            decB = decB *2;
+            decB = decB * 2;
         } else {
-            printf("Invalido");
+            printf("Invalido\n");
+            return;
+        }
+    }
+    int resultado = decA + decB;
+    DecimalBinario(resultado); //decimal>binario
+    printf("\n");
+}
+
+// Subtração de números binários
+void subtracaoBin (const char *a, const char *b) { //binario>decimal
+    int decA = 0, decB = 0;
+
+    for (int i = 0; a[i] != '\0'; i++) {
+        if (a[i] == '1') {
+            decA = decA * 2 + 1;
+        } else if (a[i] == '0') {
+            decA = decA * 2;
+        } else {
+            printf("Invalido\n");
+            return;
+        }
+    }
+    for (int i = 0; b[i] != '\0'; i++) { //binario>decimal
+        if (b[i] == '1') {
+            decB = decB * 2 + 1;
+        } else if (b[i] == '0') {
+            decB = decB * 2;
+        } else {
+            printf("Invalido\n");
+            return;
+        }
+    }
+    if (decB > decA) {
+        printf("o resultado sera um numero negativo.\n");
+        return;
+    }
+    int resultado = decA - decB;
+    DecimalBinario(resultado); //decimal>binario
+    printf("\n");
+}
+
+// Multiplicação de números binários
+void multiplicacaoBin (const char *a, const char *b) {
+    int decA = 0, decB = 0;
+
+    for (int i = 0; a[i] != '\0'; i++) { //binario>decimal
+        if (a[i] == '1') {
+            decA = decA * 2 + 1;
+        } else if (a[i] == '0') {
+            decA = decA * 2;
+        } else {
+            printf("Invalido\n");
+            return;
+        }
+    }
+    for (int i = 0; b[i] != '\0'; i++) { //binario>decimal
+        if (b[i] == '1') {
+            decB = decB * 2 + 1;
+        } else if (b[i] == '0') {
+            decB = decB * 2;
+        } else {
+            printf("Invalido\n");
             return;
         }
     }
     int resultado = decA * decB;
-    DecimalBinario(resultado);
+    DecimalBinario(resultado); //decimal>binario
     printf("\n");
 }
 
-//divisao de numeros binarios
-void divisaoBin (const char *a, const char *b) { //binario>decimal>binario
+// Divisão de números binários
+void divisaoBin (const char *a, const char *b) {
     int decA = 0, decB = 0;
-    for (int i = 0; a[i] != '\0'; i++) {
+    for (int i = 0; a[i] != '\0'; i++) { //binario>decimal
         if (a[i] == '1') {
-            decA = decA *2 +1;
+            decA = decA * 2 + 1;
         } else if (a[i] == '0') {
-            decA = decA *2;
+            decA = decA * 2;
         } else {
-            printf("Invalido");
+            printf("Invalido\n");
             return;
         }
     }
-    for (int i = 0; b[i] != '\0'; i++) { //binario>decimal>binario
+    for (int i = 0; b[i] != '\0'; i++) { //binario>decimal
         if (b[i] == '1') {
-            decB = decB *2 +1;
+            decB = decB * 2 + 1;
         } else if (b[i] == '0') {
-            decB = decB *2;
+            decB = decB * 2;
         } else {
-            printf("Invalido");
+            printf("Invalido\n");
             return;
         }
     }
     if (decB == 0) {
-        printf("Numero Invalido");
+        printf("Numero Invalido\n");
         return;
     }
     int resultado = decA / decB;
-    DecimalBinario(resultado);
+    DecimalBinario(resultado); //decimal>binario
     printf("\n");
 }
 
 int main(void) {
-    int escolha, esc2, esc3;
+    int escolha_menu, escolha_base, escolha_base2;
     char num1[100], num2[100];
 
     printf("Calculadora Binaria\n\n");
     printf("Selecione o processo que deseja realizar:\n");
     printf("1. Conversao de bases              2. Operacoes com numeros binarios\n");
-    scanf("%d", &escolha);
+    scanf("%d", &escolha_menu);
 
-    if (escolha == 1) {
-        printf("Selecione o sistema pertencente ao numero que deseja converter:\n");
+    if (escolha_menu == 1) {
+        printf("Selecione a base pertencente ao numero que deseja converter:\n");
         printf("1. Decimal, 2. Binario, 3. Octal, 4. Hexadecimal\n");
-        scanf("%d", &esc2);
-        switch (esc2) {
+        scanf("%d", &escolha_base);
+        switch (escolha_base) {
             case 1:
-                printf("Selecione o sistema que sera convertido:\n");
+                printf("Selecione a base que sera convertida:\n");
                 printf("1. Binario, 2. Octal, 3. Hexadecimal\n");
-                scanf("%d", &esc3);
-                if (esc3 == 1) {
-                    int decimal;
-                    printf("digite o numero: ");
-                    scanf("%d", &decimal);
+                scanf("%d", &escolha_base2);
+                int decimal;
+                printf("Digite o numero: ");
+                scanf("%d", &decimal);
+                if (escolha_base2 == 1) {
                     DecimalBinario(decimal);
-                } else if (esc3 == 2) {
-                    int decimal;
-                    printf("digite o numero: ");
-                    scanf("%d", &decimal);
+                    printf("\n");
+                } else if (escolha_base2 == 2) {
                     DecimalOctal(decimal);
-                } else if (esc3 == 3) {
-                    int decimal;
-                    printf("Digite o numero: ");
-                    scanf("%d", &decimal);
+                    printf("\n");
+                } else if (escolha_base2 == 3) {
                     DecimalHexadecimal(decimal);
                 } else {
-                    printf("Insira uma resposta valida.");
+                    printf("Insira uma resposta valida.\n");
                 }
                 break;
             case 2:
-                printf("Selecione o sistema que sera convertido:\n");
+                printf("Selecione a base que sera convertida:\n");
                 printf("1. Decimal, 2. Octal, 3. Hexadecimal\n");
-                scanf("%d", &esc3);
-                if (esc3 == 1) {
-                    printf("Digite o numero: ");
-                    scanf("%s", &num1);
-                    BinarioDecimal(num1);
-                } else if (esc3 == 2) {
-                    printf("Digite o numero: ");
-                    scanf("%s", &num1);
+                scanf("%d", &escolha_base2);
+                printf("Digite o numero: ");
+                scanf("%s", num1);
+                if (escolha_base2 == 1) {
+                    int result = BinarioDecimal(num1);
+                    if (result != -1) printf("%d\n", result);
+                } else if (escolha_base2 == 2) {
                     BinarioOctal(num1);
-                } else if (esc3 == 3) {
-                    printf("Digite o numero: ");
-                    scanf("%s", &num1);
+                } else if (escolha_base2 == 3) {
                     BinarioHexadecimal(num1);
                 } else {
-                    printf("Insira uma resposta valida.");
+                    printf("Insira uma resposta valida.\n");
                 }
                 break;
             case 3:
-                printf("Selecione o sistema que sera convertido:\n");
+                printf("Selecione a base que sera convertida:\n");
                 printf("1. Decimal, 2. Binario, 3. Hexadecimal\n");
-                scanf("%d", &esc3);
-                if (esc3 == 1) {
-                    printf("Digite o numero: ");
-                    scanf("%s", &num1);
-                    OctalDecimal(num1);
-                } else if (esc3 == 2) {
-                    printf("Digite o numero: ");
-                    scanf("%s", &num1);
+                scanf("%d", &escolha_base2);
+                printf("Digite o numero: ");
+                scanf("%s", num1);
+                if (escolha_base2 == 1) {
+                    int result = OctalDecimal(num1);
+                    if (result != -1) printf("%d\n", result);
+                } else if (escolha_base2 == 2) {
                     OctalBinario(num1);
-                } else if (esc3 == 3) {
-                    printf("Digite o numero: ");
-                    scanf("%s", &num1);
+                } else if (escolha_base2 == 3) {
                     OctalHexadecimal(num1);
                 } else {
-                    printf("Insira uma resposta valida.");
+                    printf("Insira uma resposta valida.\n");
                 }
                 break;
             case 4:
-                printf("Selecione o sistema que sera convertido:\n");
+                printf("Selecione a base que sera convertida:\n");
                 printf("1. Decimal, 2. Binario, 3. Octal\n");
-                scanf("%d", &esc3);
-                if (esc3 == 1) {
-                    printf("Digite o numero: ");
-                    scanf("%s", &num1);
-                    HexadecimalDecimal(num1);
-                } else if (esc3 == 2) {
-                    printf("Digite o numero: ");
-                    scanf("%s", &num1);
+                scanf("%d", &escolha_base2);
+                printf("Digite o numero: ");
+                scanf("%s", num1);
+                if (escolha_base2 == 1) {
+                    int result = HexadecimalDecimal(num1);
+                    if (result != -1) printf("%d\n", result);
+                } else if (escolha_base2 == 2) {
                     HexadecimalBinario(num1);
-                } else if (esc3 == 3) {
-                    printf("Digite o numero: ");
-                    scanf("%s", &num1);
+                } else if (escolha_base2 == 3) {
                     HexadecimalOctal(num1);
                 } else {
-                    printf("Insira uma resposta valida.");
+                    printf("Insira uma resposta valida.\n");
                 }
                 break;
             default:
-                printf("Operacao Invalida");
+                printf("Operacao Invalida\n");
         }
-    } else if (escolha == 2) {
+    } else if (escolha_menu == 2) {
         printf("Selecione a operacao que deseja realizar:\n");
         printf("1. Soma, 2. Subtracao, 3. Multiplicacao, 4. Divisao\n");
-        scanf("%d", &esc2);
-        switch (esc2) {
+        scanf("%d", &escolha_base);
+        switch (escolha_base) {
             case 1:
                 printf("Informe o primeiro numero da soma: \n");
                 scanf("%s", num1);
                 printf("Informe o segundo numero da soma: \n");
                 scanf("%s", num2);
-                char *resultado = somaBin(num1, num2);
-                printf("Resultado: %s\n", resultado);
-                free(resultado);
+                somaBin(num1, num2);
                 break;
             case 2:
                 printf("Informe o primeiro numero da subtracao: \n");
                 scanf("%s", num1);
                 printf("Informe o segundo numero da subtracao: \n");
                 scanf("%s", num2);
-                char *resultado_sub = subtracaoBin(num1, num2);
-                if (resultado_sub != NULL) {
-                    printf("Resultado: %s\n", resultado_sub);
-                    free(resultado_sub);
-                }
+                subtracaoBin(num1, num2);
                 break;
             case 3:
                 printf("Informe o primeiro numero da multiplicacao: \n");
-                scanf("%s", &num1);
+                scanf("%s", num1);
                 printf("Informe o segundo numero da multiplicacao: \n");
-                scanf("%s", &num2);
+                scanf("%s", num2);
                 multiplicacaoBin(num1, num2);
                 break;
             case 4:
                 printf("Informe o primeiro numero da divisao: \n");
-                scanf("%s", &num1);
+                scanf("%s", num1);
                 printf("Informe o segundo numero da divisao: \n");
-                scanf("%s", &num2);
+                scanf("%s", num2);
                 divisaoBin(num1, num2);
                 break;
             default:
-                printf("Operacao Invalida");
+                printf("Operacao Invalida\n");
         }
     } else {
-        printf("Operacao Invalida");
+        printf("Operacao Invalida\n");
     }
 
     return 0;
